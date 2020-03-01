@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Domain Geolocator</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+      integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+      crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+    integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+    crossorigin=""></script>
+  </head>
+  <body>
+    <div class="container">
+      <fieldset>
+        <form action="/geolocate" method="get">
+          <input name="domain" type="text" class="ghost-input" placeholder="Enter a Domain" required>
+          <input type="submit" class="ghost-button" value="Geolocate Domain">
+        </form>
+        <% if(error !== null){ %>
+          <p><%= error %></p>
+        <% } %>
+      </fieldset>
+      
+    </div>
+    <div class="container">
+      <div id="map"></div>
+    </div>
+    <div class="container">
+      <p><%= domain %></p>
+      <p>Location: <%= location.country_name %>, <%= location.region_name %>, <%= location.city %></p>
+      <p>Coordinates: <%= location.latitude %>, <%= location.longitude %></p>
+      <p>IP Address: <%= location.ip %></p>
+    </div>
+  </body>
+  <script>
+    var geolocated_domain = <%- JSON.stringify(location) %>;
+    var map = L.map('map').setView([geolocated_domain.latitude, geolocated_domain.longitude], 13);
+
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 18,
+        id: 'mapbox/light-v10',
+        tileSize: 512,
+        zoomOffset: -1,
+        accessToken: 'pk.eyJ1IjoicmN5eXUiLCJhIjoiY2s3MTJzcnhvMDJtMzNmbzhkN2w3bHB3cCJ9.CVzlIDKnSGcJAivkLKN-1A'
+    }).addTo(map);
+    var market = L.marker([geolocated_domain.latitude, geolocated_domain.longitude]).addTo(map);
+  </script>
+</html>
