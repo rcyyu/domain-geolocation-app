@@ -55,7 +55,7 @@
       
       var polyline = L.polyline(lineCoords, {color: 'red'}).addTo(map);
       var user_marker = L.marker([geolocated_user.latitude, geolocated_user.longitude], title='You').addTo(map);
-      var domain_marker = L.marker([geolocated_domain.latitude, geolocated_domain.longitude], title=<%= `${domain}` %>).addTo(map);
+      var domain_marker = L.marker([geolocated_domain.latitude, geolocated_domain.longitude], title='<%= domain %>').addTo(map);
 
       // Fit map to user and domain location
       map.fitBounds(polyline.getBounds());
