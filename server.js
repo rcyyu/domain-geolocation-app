@@ -12,22 +12,22 @@ app.set('view engine', 'ejs')
 const apiKey = '298877b144bc9c3f4165ea0fe436f486';
 
 // Get the index file
-app.get('/', function (req, res) {
+app.get('/', (req, res) => {
     res.render('index');
 });
 
 // Load geolocated page from index
-app.get('/geolocate?', function (req, res) {
+app.get('/geolocate?', (req, res) => {
     let domain = req.query.domain;
 
     // Get user's local IP
-    var user_ip = (req.headers['x-forwarded-for'] || '').split(',').pop() || 
-        req.connection.remoteAddress || 
-        req.socket.remoteAddress || 
+    var user_ip = (req.headers['x-forwarded-for'] || '').split(',').pop() ||
+        req.connection.remoteAddress ||
+        req.socket.remoteAddress ||
         req.connection.socket.remoteAddress;
 
     // Get domain IP
-    dns.lookup(domain, function onLookup(err, domain_ip, family) {
+    dns.lookup(domain, (err, domain_ip, family) => {
         // Address(es) is the IP address of the domain
         let geolocate_user_url = `http://api.ipstack.com/${user_ip}?access_key=${apiKey}`
         // Address(es) is the IP address of the domain
@@ -35,10 +35,10 @@ app.get('/geolocate?', function (req, res) {
 
         if (err) {
             // If DNS lookup errored
-            res.render('geolocated', { domain: null, location: null, error: `Error ${domain} is not a valid domain, please enter a valid domain`});
+            res.render('geolocated', { domain: null, location: null, error: `Error ${domain} is not a valid domain, please enter a valid domain` });
         } else {
             // Geolocate user IP using ipstack API
-            request(geolocate_user_url, function(err, response, body) {
+            request(geolocate_user_url, (err, response, body) => {
                 let user_location = JSON.parse(body);
                 if (err) {
                     res.render('geolocated', {
@@ -49,7 +49,7 @@ app.get('/geolocate?', function (req, res) {
                     });
                 } else {
                     // Geolocate domain IP address using ipstack API
-                    request(geolocate_domain_url, function(err, response, body) {
+                    request(geolocate_domain_url, (err, response, body) => {
                         let domain_location = JSON.parse(body);
                         if (err) {
                             // If ipstack API errored
@@ -60,7 +60,7 @@ app.get('/geolocate?', function (req, res) {
                                 error: 'Error, please try again'
                             });
                         } else {
-                            res.render('geolocated',{
+                            res.render('geolocated', {
                                 domain: domain,
                                 user_location: user_location,
                                 domain_location: domain_location,
@@ -74,6 +74,6 @@ app.get('/geolocate?', function (req, res) {
     });
 });
 
-app.listen(process.env.PORT || 3000, function () {
+app.listen(process.env.PORT || 3000, () => {
     console.log('Listening on port 3000!')
 });
