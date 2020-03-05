@@ -72,8 +72,8 @@ body {
   p {
     margin: 0;
   }
-  p.popup {
-    font-size: 10px;
+  .leaflet-popup-content p {
+    font-size: 12px;
   }
   #map {
     height: 400px;

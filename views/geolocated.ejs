@@ -63,8 +63,7 @@
         <p>IP Address: ${geolocated_user.ip}</p>
       `, {
         'closeButton': false,
-        'autoClose': false,
-        'className': 'popup'
+        'autoClose': false
       }).openPopup();
       var domain_marker = L.marker([geolocated_domain.latitude, geolocated_domain.longitude], title='<%= domain %>').addTo(map);
       domain_marker.bindPopup(`
@@ -74,8 +73,7 @@
         <p>IP Address: ${geolocated_domain.ip}</p>
       `, {
         'closeButton': false,
-        'autoClose': false,
-        'className': 'popup'
+        'autoClose': false
       }).openPopup();
       // Fit map to user and domain location
       map.fitBounds(polyline.getBounds());
