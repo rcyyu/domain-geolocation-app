@@ -55,7 +55,7 @@
       ];
       
       var polyline = L.polyline(lineCoords, {color: 'red'}).addTo(map);
-      var user_popup = L.marker([geolocated_user.latitude, geolocated_user.longitude], title='You').addTo(map);
+      var user_marker = L.marker([geolocated_user.latitude, geolocated_user.longitude], title='You').addTo(map);
       user_marker.bindPopup(`
         <p>You</p>
         <p>Location: ${geolocated_user.country_name}, ${geolocated_user.region_name}, ${geolocated_user.city}</p>
