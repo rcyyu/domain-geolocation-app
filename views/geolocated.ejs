@@ -57,20 +57,30 @@
       var polyline = L.polyline(lineCoords, {color: 'red'}).addTo(map);
       var user_marker = L.marker([geolocated_user.latitude, geolocated_user.longitude], title='You').addTo(map);
       user_marker.bindPopup(`
-        <p>You</p>
-        <p>Location: ${geolocated_user.country_name}, ${geolocated_user.region_name}, ${geolocated_user.city}</p>
-        <p>Coordinates: ${geolocated_user.latitude}, ${geolocated_user.longitude}</p>
-        <p>IP Address: ${geolocated_user.ip}</p>
+        <p>  
+          You
+          <br />
+          Location: ${geolocated_user.country_name}, ${geolocated_user.region_name}, ${geolocated_user.city}
+          <br />
+          Coordinates: ${geolocated_user.latitude}, ${geolocated_user.longitude}
+          <br />
+          IP Address: ${geolocated_user.ip}
+        </p>
       `, {
         'closeButton': false,
         'autoClose': false
       }).openPopup();
       var domain_marker = L.marker([geolocated_domain.latitude, geolocated_domain.longitude], title='<%= domain %>').addTo(map);
       domain_marker.bindPopup(`
-        <p>${domain}</p>
-        <p>Location: ${geolocated_domain.country_name}, ${geolocated_domain.region_name}, ${geolocated_domain.city}</p>
-        <p>Coordinates: ${geolocated_domain.latitude}, ${geolocated_domain.longitude}</p>
-        <p>IP Address: ${geolocated_domain.ip}</p>
+        <p>
+          ${domain}
+          <br />
+          Location: ${geolocated_domain.country_name}, ${geolocated_domain.region_name}, ${geolocated_domain.city}
+          <br />
+          Coordinates: ${geolocated_domain.latitude}, ${geolocated_domain.longitude}</p>
+          <br />
+          IP Address: ${geolocated_domain.ip}
+        </p>
       `, {
         'closeButton': false,
         'autoClose': false
