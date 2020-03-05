@@ -29,17 +29,20 @@
       <div id="map"></div>
     </div>
     <div class="container">
-      <% if (location) { %>
+      <% if (domain_location && user_location) { %>
         <p><%= domain %></p>
-        <p>Location: <%= location.country_name %>, <%= location.region_name %>, <%= location.city %></p>
-        <p>Coordinates: <%= location.latitude %>, <%= location.longitude %></p>
-        <p>IP Address: <%= location.ip %></p>
+        <p>Location: <%= domain_location.country_name %>, <%= domain_location.region_name %>, <%= domain_location.city %></p>
+        <p>Coordinates: <%= domain_location.latitude %>, <%= domain_location.longitude %></p>
+        <p>IP Address: <%= domain_location.ip %></p>
       <% } %>
     </div>
   </body>
   <script>
-    <% if (location) { %>
-    var geolocated_domain = <%- JSON.stringify(location) %>;
+    <% if (domain_location && user_location) { %>
+    var geolocated_user = <%- JSON.stringify(user_location) %>;
+    console.log('geolocated_user', geolocated_user);
+    var geolocated_domain = <%- JSON.stringify(domain_location) %>;
+    console.log('geolocated_domain', geolocated_domain);
     var map = L.map('map').setView([geolocated_domain.latitude, geolocated_domain.longitude], 13);
 
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
