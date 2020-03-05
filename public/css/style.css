@@ -72,6 +72,9 @@ body {
   p {
     margin: 0;
   }
+  p.popup {
+    font-size: 10px;
+  }
   #map {
     height: 400px;
   }
