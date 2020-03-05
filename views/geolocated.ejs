@@ -39,6 +39,7 @@
   </body>
   <script>
     <% if (domain_location && user_location) { %>
+      var domain = '<%= domain %>';
       var geolocated_user = <%- JSON.stringify(user_location) %>;
       var geolocated_domain = <%- JSON.stringify(domain_location) %>;
       
@@ -54,10 +55,20 @@
       ];
       
       var polyline = L.polyline(lineCoords, {color: 'red'}).addTo(map);
-      var user_marker = L.marker([geolocated_user.latitude, geolocated_user.longitude], title='You').addTo(map);
-      user_marker.bindTooltip('You', permanent=true).openTooltip();
+      var user_popup = L.marker([geolocated_user.latitude, geolocated_user.longitude], title='You').addTo(map);
+      user_marker.bindPopup(`
+        <p>You</p>
+        <p>Location: ${geolocated_user.country_name}, ${geolocated_user.region_name}, ${geolocated_user.city}</p>
+        <p>Coordinates: ${geolocated_user.latitude}, ${geolocated_user.longitude}</p>
+        <p>IP Address: ${geolocated_user.ip}</p>
+      `, closeButton=false, autoClose=false).openPopup();
       var domain_marker = L.marker([geolocated_domain.latitude, geolocated_domain.longitude], title='<%= domain %>').addTo(map);
-      user_marker.bindTooltip('<%= domain %>', permanent=true).openTooltip();
+      domain_marker.bindPopup(`
+        <p>${domain}</p>
+        <p>Location: ${geolocated_domain.country_name}, ${geolocated_domain.region_name}, ${geolocated_domain.city}</p>
+        <p>Coordinates: ${geolocated_domain.latitude}, ${geolocated_domain.longitude}</p>
+        <p>IP Address: ${geolocated_domain.ip}</p>
+      `, closeButton=false, autoClose=false).openPopup();
       // Fit map to user and domain location
       map.fitBounds(polyline.getBounds());
 
