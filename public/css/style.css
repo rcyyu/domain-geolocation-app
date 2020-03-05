@@ -51,7 +51,7 @@ body {
     -o-transition: all 0.1s ease-in-out;
     transition: all 0.1s ease-in-out;
   }
-  .ghost-input:focus {
+  .ghost-input {
     border-bottom:1px solid #ddd;
   }
   .ghost-button {
@@ -74,6 +74,14 @@ body {
   }
   .leaflet-popup-content p {
     font-size: 12px;
+  }
+  .footer {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: right;
+    margin: 5px;
   }
   #map {
     height: 400px;
