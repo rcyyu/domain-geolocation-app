@@ -22,7 +22,7 @@
 					required>
 				<input type="submit" class="ghost-button" value="Geolocate Domain">
 			</form>
-			<% if(error !== null){ %>
+			<% if (error !== null){ %>
 			<p><%= error %></p>
 			<% } %>
 		</fieldset>
@@ -37,9 +37,9 @@
 </body>
 <script>
     <% if (domain_location && user_location) { %>
-      var domain = '<%= domain %>';
-		var geolocated_user = <% - JSON.stringify(user_location) %>;
-		var geolocated_domain = <% - JSON.stringify(domain_location) %>;
+      	var domain = '<%= domain %>';
+		var geolocated_user = <%- JSON.stringify(user_location) %>;
+		var geolocated_domain = <%- JSON.stringify(domain_location) %>;
 
 		var center_latitude = (geolocated_domain.latitude + geolocated_user.latitude) / 2;
 		var center_longitude = (geolocated_domain.longitude + geolocated_user.longitude) / 2;
