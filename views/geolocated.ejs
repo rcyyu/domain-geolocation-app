@@ -39,27 +39,36 @@
   </body>
   <script>
     <% if (domain_location && user_location) { %>
-    var geolocated_user = <%- JSON.stringify(user_location) %>;
-    var geolocated_domain = <%- JSON.stringify(domain_location) %>;
-    
-    var center_latitude = (geolocated_domain.latitude + geolocated_user.latitude) / 2;
-    var center_longitude = (geolocated_domain.longitude + geolocated_user.longitude) / 2;
+      var geolocated_user = <%- JSON.stringify(user_location) %>;
+      var geolocated_domain = <%- JSON.stringify(domain_location) %>;
+      
+      var center_latitude = (geolocated_domain.latitude + geolocated_user.latitude) / 2;
+      var center_longitude = (geolocated_domain.longitude + geolocated_user.longitude) / 2;
 
-    // Create leaflet map
-    var map = L.map('map').setView([center_latitude, center_longitude], 13);
-    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-        maxZoom: 18,
-        id: 'mapbox/light-v10',
-        tileSize: 512,
-        zoomOffset: -1,
-        // Register at mapbox.com for a free accessToken for Mapbox's tilelayers
-        accessToken: 'pk.eyJ1IjoicmN5eXUiLCJhIjoiY2s3MTJzcnhvMDJtMzNmbzhkN2w3bHB3cCJ9.CVzlIDKnSGcJAivkLKN-1A'
-    }).addTo(map);
+      // Create leaflet map
+      var map = L.map('map').setView([center_latitude, center_longitude], 13);
+      
+      var lineCoords = [
+        [geolocated_domain.latitude, geolocated_domain.longitude],
+        [geolocated_user.latitude, geolocated_user.longitude]
+      ];
+      
+      var polyline = L.polyline(lineCoords, {color: 'red'}).addTo(map);
+      var user_marker = L.marker([geolocated_user.latitude, geolocated_user.longitude]).addTo(map);
+      var domain_marker = L.marker([geolocated_domain.latitude, geolocated_domain.longitude]).addTo(map);
 
-    var user_marker = L.marker([geolocated_user.latitude, geolocated_user.longitude]).addTo(map);
-    var domain_marker = L.marker([geolocated_domain.latitude, geolocated_domain.longitude]).addTo(map);
+      // Fit map to user and domain location
+      map.fitBounds(polyline.getBounds());
 
+      L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+          attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+          maxZoom: 18,
+          id: 'mapbox/light-v10',
+          tileSize: 512,
+          zoomOffset: -1,
+          // Register at mapbox.com for a free accessToken for Mapbox's tilelayers
+          accessToken: 'pk.eyJ1IjoicmN5eXUiLCJhIjoiY2s3MTJzcnhvMDJtMzNmbzhkN2w3bHB3cCJ9.CVzlIDKnSGcJAivkLKN-1A'
+      }).addTo(map);
     <% } %>
   </script>
 </html>
