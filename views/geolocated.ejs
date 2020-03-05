@@ -29,13 +29,16 @@
       <div id="map"></div>
     </div>
     <div class="container">
-      <p><%= domain %></p>
-      <p>Location: <%= location.country_name %>, <%= location.region_name %>, <%= location.city %></p>
-      <p>Coordinates: <%= location.latitude %>, <%= location.longitude %></p>
-      <p>IP Address: <%= location.ip %></p>
+      <% if (location) { %>
+        <p><%= domain %></p>
+        <p>Location: <%= location.country_name %>, <%= location.region_name %>, <%= location.city %></p>
+        <p>Coordinates: <%= location.latitude %>, <%= location.longitude %></p>
+        <p>IP Address: <%= location.ip %></p>
+      <% } %>
     </div>
   </body>
   <script>
+    <% if (location) { %>
     var geolocated_domain = <%- JSON.stringify(location) %>;
     var map = L.map('map').setView([geolocated_domain.latitude, geolocated_domain.longitude], 13);
 
@@ -46,8 +49,9 @@
         tileSize: 512,
         zoomOffset: -1,
         // Register at mapbox.com for a free accessToken for Mapbox's tilelayers
-        accessToken: 'pk.eyJ1IjoicmN5eXUiLCJhIjoiY2s3MTJzcnhvMDJtMzNmbzhkN2w3bHB3cCJ9.CVzlIDKnSGcJAivkLKN-1A'
+        accessToken: '*****'
     }).addTo(map);
     var market = L.marker([geolocated_domain.latitude, geolocated_domain.longitude]).addTo(map);
+    <% } %>
   </script>
 </html>
