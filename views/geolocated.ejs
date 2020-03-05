@@ -43,7 +43,7 @@
     var geolocated_domain = <%- JSON.stringify(domain_location) %>;
     
     var center_latitude = (geolocated_domain.latitude + geolocated_user.latitude) / 2;
-    var center_longitude = (geolocated_domain.latitude + geolocated_user.latitude) / 2;
+    var center_longitude = (geolocated_domain.longitude + geolocated_user.longitude) / 2;
 
     // Create leaflet map
     var map = L.map('map').setView([center_latitude, center_longitude], 13);
