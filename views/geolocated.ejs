@@ -26,15 +26,8 @@
 
     </div>
     <div class="container">
+      <p><%= domain %></p>
       <div id="map"></div>
-    </div>
-    <div class="container">
-      <% if (domain_location && user_location) { %>
-        <p><%= domain %></p>
-        <p>Location: <%= domain_location.country_name %>, <%= domain_location.region_name %>, <%= domain_location.city %></p>
-        <p>Coordinates: <%= domain_location.latitude %>, <%= domain_location.longitude %></p>
-        <p>IP Address: <%= domain_location.ip %></p>
-      <% } %>
     </div>
   </body>
   <script>
@@ -55,7 +48,7 @@
       ];
       
       var polyline = L.polyline(lineCoords, {color: 'red'}).addTo(map);
-      var user_marker = L.marker([geolocated_user.latitude, geolocated_user.longitude], title='You').addTo(map);
+      var user_marker = L.marker([geolocated_user.latitude, geolocated_user.longitude], { 'title': 'You' }).addTo(map);
       user_marker.bindPopup(`
         <p>  
           <b><u>You</u></b>
@@ -69,7 +62,7 @@
       `, {
         'maxWidth': 200
       });
-      var domain_marker = L.marker([geolocated_domain.latitude, geolocated_domain.longitude], title='<%= domain %>').addTo(map);
+      var domain_marker = L.marker([geolocated_domain.latitude, geolocated_domain.longitude], { 'title': '<%= domain %>' }).addTo(map);
       domain_marker.bindPopup(`
         <p>
           <b><u>${domain}</u></b>
