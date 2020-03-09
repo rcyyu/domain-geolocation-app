@@ -9,7 +9,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs')
 
 // Register at ipstack.com to get a free API key and enter it here
-const apiKey = '*********';
+const apiKey = '298877b144bc9c3f4165ea0fe436f486';
 
 // Get the index file
 app.get('/', (req, res) => {
