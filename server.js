@@ -18,10 +18,10 @@ app.get('/', (req, res) => {
 
 // Load geolocated page from index
 app.get('/geolocate?', (req, res) => {
-    let domain = req.query.domain;
+    const domain = req.query.domain;
 
     // Get user's local IP
-    var user_ip = (req.headers['x-forwarded-for'] || '').split(',').pop() ||
+    const user_ip = (req.headers['x-forwarded-for'] || '').split(',').pop() ||
         req.connection.remoteAddress ||
         req.socket.remoteAddress ||
         req.connection.socket.remoteAddress;
@@ -29,9 +29,9 @@ app.get('/geolocate?', (req, res) => {
     // Get domain IP
     dns.lookup(domain, (err, domain_ip, family) => {
         // Address(es) is the IP address of the domain
-        let geolocate_user_url = `http://api.ipstack.com/${user_ip}?access_key=${apiKey}`
+        const geolocate_user_url = `http://api.ipstack.com/${user_ip}?access_key=${apiKey}`
         // Address(es) is the IP address of the domain
-        let geolocate_domain_url = `http://api.ipstack.com/${domain_ip}?access_key=${apiKey}`
+        const geolocate_domain_url = `http://api.ipstack.com/${domain_ip}?access_key=${apiKey}`
 
         if (err) {
             // If DNS lookup errored
@@ -39,7 +39,7 @@ app.get('/geolocate?', (req, res) => {
         } else {
             // Geolocate user IP using ipstack API
             request(geolocate_user_url, (err, response, body) => {
-                let user_location = JSON.parse(body);
+                const user_location = JSON.parse(body);
                 if (err) {
                     res.render('geolocated', {
                         domain: domain,
@@ -50,7 +50,7 @@ app.get('/geolocate?', (req, res) => {
                 } else {
                     // Geolocate domain IP address using ipstack API
                     request(geolocate_domain_url, (err, response, body) => {
-                        let domain_location = JSON.parse(body);
+                        const domain_location = JSON.parse(body);
                         if (err) {
                             // If ipstack API errored
                             res.render('geolocated', {

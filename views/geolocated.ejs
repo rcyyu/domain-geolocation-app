@@ -1,102 +1,99 @@
 <!DOCTYPE html>
 <html>
+	<head>
+		<meta charset="utf-8">
+		<title>Domain Geolocator</title>
+		<link rel="stylesheet" type="text/css" href="/css/style.css">
+		<link href='https://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+			integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+			crossorigin="" />
+		<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+			integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+			crossorigin=""></script>
+	</head>
+	<body>
+		<div class="container">
+			<fieldset>
+				<form action="/geolocate" method="get">
+					<input name="domain" type="text" class="ghost-input" placeholder="Enter a Domain" value="<%= domain %>"
+						required>
+					<input type="submit" class="ghost-button" value="Geolocate Domain">
+				</form>
+				<% if (error !== null){ %>
+				<p><%= error %></p>
+				<% } %>
+			</fieldset>
 
-<head>
-	<meta charset="utf-8">
-	<title>Domain Geolocator</title>
-	<link rel="stylesheet" type="text/css" href="/css/style.css">
-	<link href='https://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
-		integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
-		crossorigin="" />
-	<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
-		integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
-		crossorigin=""></script>
-</head>
+		</div>
+		<div class="container">
+			<div id="map"></div>
+		</div>
+		<div class="footer">
+			Made by <a href="https://github.com/rcyyu" target="_blank">Ronald Yu</a> for GEOG 483 Winter 2020 Tutorial
+		</div>
+	</body>
+	<script>
+		<% if (domain_location && user_location) { %>
+			var domain = '<%= domain %>';
+			var geolocated_user = <%- JSON.stringify(user_location) %>;
+			var geolocated_domain = <%- JSON.stringify(domain_location) %>;
 
-<body>
-	<div class="container">
-		<fieldset>
-			<form action="/geolocate" method="get">
-				<input name="domain" type="text" class="ghost-input" placeholder="Enter a Domain" value="<%= domain %>"
-					required>
-				<input type="submit" class="ghost-button" value="Geolocate Domain">
-			</form>
-			<% if (error !== null){ %>
-			<p><%= error %></p>
-			<% } %>
-		</fieldset>
+			var center_latitude = (geolocated_domain.latitude + geolocated_user.latitude) / 2;
+			var center_longitude = (geolocated_domain.longitude + geolocated_user.longitude) / 2;
 
-	</div>
-	<div class="container">
-		<div id="map"></div>
-	</div>
-	<div class="footer">
-		Made by <a href="https://github.com/rcyyu" target="_blank">Ronald Yu</a> for GEOG 483 Winter 2020 Tutorial
-	</div>
-</body>
-<script>
-    <% if (domain_location && user_location) { %>
-      	var domain = '<%= domain %>';
-		var geolocated_user = <%- JSON.stringify(user_location) %>;
-		var geolocated_domain = <%- JSON.stringify(domain_location) %>;
+			// Create leaflet map
+			var map = L.map('map').setView([center_latitude, center_longitude], 13);
 
-		var center_latitude = (geolocated_domain.latitude + geolocated_user.latitude) / 2;
-		var center_longitude = (geolocated_domain.longitude + geolocated_user.longitude) / 2;
+			// Add polyine connecting user and domain server
+			var lineCoords = [
+				[geolocated_domain.latitude, geolocated_domain.longitude],
+				[geolocated_user.latitude, geolocated_user.longitude]
+			];
+			var polyline = L.polyline(lineCoords, { color: 'red' }).addTo(map);
 
-		// Create leaflet map
-		var map = L.map('map').setView([center_latitude, center_longitude], 13);
+			// User marker
+			var user_marker = L.marker([geolocated_user.latitude, geolocated_user.longitude], { 'title': 'You' }).addTo(map);
+			user_marker.bindPopup(`
+			<p>  
+			<b><u>You</u></b>
+			<br />
+			<b>Location:</b> ${geolocated_user.country_name}, ${geolocated_user.region_name}, ${geolocated_user.city}
+			<br />
+			<b>Coordinates:</b> ${geolocated_user.latitude}, ${geolocated_user.longitude}
+			<br />
+			<b>IP Address:</b> ${geolocated_user.ip}
+			</p>
+		`, {
+				'maxWidth': 200
+			});
 
-		// Add polyine connecting user and domain server
-		var lineCoords = [
-			[geolocated_domain.latitude, geolocated_domain.longitude],
-			[geolocated_user.latitude, geolocated_user.longitude]
-		];
-		var polyline = L.polyline(lineCoords, { color: 'red' }).addTo(map);
+			// Domain marker
+			var domain_marker = L.marker([geolocated_domain.latitude, geolocated_domain.longitude], { 'title': '<%= domain %>' }).addTo(map);
+			domain_marker.bindPopup(`
+			<p>
+			<b><u>${domain}</u></b>
+			<br />
+			<b>Location:</b> ${geolocated_domain.country_name}, ${geolocated_domain.region_name}, ${geolocated_domain.city}
+			<br />
+			<b>Coordinates:</b> ${geolocated_domain.latitude}, ${geolocated_domain.longitude}
+			<br />
+			<b>IP Address:</b> ${geolocated_domain.ip}
+			</p>
+		`, {
+				'maxWidth': 200
+			});
 
-		// User marker
-		var user_marker = L.marker([geolocated_user.latitude, geolocated_user.longitude], { 'title': 'You' }).addTo(map);
-		user_marker.bindPopup(`
-        <p>  
-          <b><u>You</u></b>
-          <br />
-          <b>Location:</b> ${geolocated_user.country_name}, ${geolocated_user.region_name}, ${geolocated_user.city}
-          <br />
-          <b>Coordinates:</b> ${geolocated_user.latitude}, ${geolocated_user.longitude}
-          <br />
-          <b>IP Address:</b> ${geolocated_user.ip}
-        </p>
-      `, {
-			'maxWidth': 200
-		});
+			// Fit map to user and domain location
+			map.fitBounds(polyline.getBounds());
 
-		// Domain marker
-		var domain_marker = L.marker([geolocated_domain.latitude, geolocated_domain.longitude], { 'title': '<%= domain %>' }).addTo(map);
-		domain_marker.bindPopup(`
-        <p>
-          <b><u>${domain}</u></b>
-          <br />
-          <b>Location:</b> ${geolocated_domain.country_name}, ${geolocated_domain.region_name}, ${geolocated_domain.city}
-          <br />
-          <b>Coordinates:</b> ${geolocated_domain.latitude}, ${geolocated_domain.longitude}
-          <br />
-          <b>IP Address:</b> ${geolocated_domain.ip}
-        </p>
-      `, {
-			'maxWidth': 200
-		});
-
-		// Fit map to user and domain location
-		map.fitBounds(polyline.getBounds());
-
-		L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}{r}.{ext}', {
-			attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-			subdomains: 'abcd',
-			minZoom: 0,
-			maxZoom: 20,
-			ext: 'png'
-		}).addTo(map);
-    <% } %>
-</script>
-
+			L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}{r}.{ext}', {
+				attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+				subdomains: 'abcd',
+				minZoom: 5,
+				maxZoom: 20,
+				ext: 'png'
+			}).addTo(map);
+		<% } %>
+	</script>
 </html>
