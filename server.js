@@ -37,7 +37,8 @@ app.get('/geolocate?', (req, res) => {
             // If DNS lookup errored
             res.render('geolocated', {
                 domain: null,
-                location: null,
+                user_location: null,
+                domain_location: null,
                 error: `Error ${domain} is not a valid domain, please enter a valid domain`
             });
         } else {
