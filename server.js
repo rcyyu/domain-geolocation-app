@@ -9,7 +9,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs')
 
 // Register at ipstack.com to get a free API key and enter it here
-const apiKey = '*********';
+const apiKey = '693d68d2e0a485a98aa4bec016c2e4b8';
 
 // Get the index file
 app.get('/', (req, res) => {
@@ -35,7 +35,11 @@ app.get('/geolocate?', (req, res) => {
 
         if (err) {
             // If DNS lookup errored
-            res.render('geolocated', { domain: null, location: null, error: `Error ${domain} is not a valid domain, please enter a valid domain` });
+            res.render('geolocated', {
+                domain: null,
+                location: null,
+                error: `Error ${domain} is not a valid domain, please enter a valid domain`
+            });
         } else {
             // Geolocate user IP using ipstack API
             request(geolocate_user_url, (err, response, body) => {
